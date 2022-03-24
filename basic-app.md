@@ -382,7 +382,7 @@ k3d cluster create spacecrafts --agents 1 -p 8080:80@agent[0]
 Next thing, we need to build a docker image and push it to a registry. You can skip this step if you want and use the image from our public quay.io: [quay.io/django-hurricane/spacecrafts-demo](https://quay.io/repository/django-hurricane/spacecrafts-demo).
 Remember to remove the adaptation of `pyproject.toml` if you've followed the project setup with our cookiecutter.
 
-Now we need to install helm charts, which will define our cluster infrastructure. [<ins>**Our repository**</ins>](https://github.com/django-hurricane/spacecrafts-demo) already contains them in the `helm` directory.
+Now we need to install Helm charts, which will define our cluster infrastructure. [<ins>**Our repository**</ins>](https://github.com/django-hurricane/spacecrafts-demo) already contains them in the `helm` directory.
 You can also use [<ins>**our cookiecutter**</ins>](https://github.com/Blueshoe/hurricane-based-helm-template) for Helm charts for a Hurricane-based Django app.
 
 To use it, run following command from your projects root directory:
