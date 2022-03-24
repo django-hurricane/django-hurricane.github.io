@@ -13,7 +13,7 @@ title: Guide to your first Hurricane-based Application
    2. [Setup with a cookiecutter template](#setup-with-a-cookiecutter-template)
    3. [Basic setup of the spacecrafts application](#basic-setup-of-the-spacecrafts-application)
    4. [Configure GraphQL](#configure-graphql)
-   5. [Start hurricane server](#start-hurricane-server)
+   5. [Start Hurricane server](#start-hurricane-server)
 2. [Run this application using Django-Hurricane in a Kubernetes cluster](#2-run-this-application-using-django-hurricane-in-a-kubernetes-cluster)
    1. [Built-in Kubernetes probes and custom check handler](#built-in-kubernetes-probes-and-custom-check-handler)
    2. [Local Kubernetes development: code hot-reloading, debugging and more](#local-kubernetes-development-code-hot-reloading-debugging-and-more)
@@ -26,7 +26,7 @@ django-graphene we will be able to use GraphQL functionality for our application
 > Alternatively, you can skip this part and clone [<ins>**this repository**</ins>](https://github.com/django-hurricane/spacecrafts-demo). 
 > 
 > You can then head directly to step 2:  
-> [<ins>**Run this application using Django Hurricane**</ins>](#2-run-this-application-using-django-hurricane)
+> [<ins>**Run this application using Django Hurricane**</ins>](#2-run-this-application-using-django-hurricane-in-a-kubernetes-cluster)
 
 If you want to setup the project manual, you can proceed with the following section.
 Alternatively you could [<ins>**head to the next section**</ins>](#setup-with-a-cookiecutter-template) which uses the [<ins>**cookiecutter template**</ins>](https://github.com/Blueshoe/django-hurricane-template) we developed to bootstrap Django applications that use Django-Hurricane.
@@ -171,7 +171,7 @@ INSTALLED_APPS = [
 ]
 ~~~
 
-To have hurricanes logs available, add the following logging setting to your settings file:
+To have Hurricanes logs available, add the following logging setting to your settings file:
 ~~~python
 # manual setup: src/spacecrafts/settings.py
 # cookiecutter: src/configuration/components/logging.py
@@ -328,10 +328,10 @@ DJANGO_STATIC_ROOT=static
 DJANGO_DEBUG=True
 ~~~
 
-### Start hurricane server
+### Start Hurricane server
 
 Now you can start the server. With `--autoreload` flag server will be automatically reloaded upon changes in the code. 
-Static files will be served if you add `--static` flag. We instruct hurricane to run two Django management command. We collect statics with `--command 'collectstatic --noinput'` and we also migrate the database with `--command 'migrate'`.
+Static files will be served if you add `--static` flag. We instruct Hurricane to run two Django management command. We collect statics with `--command 'collectstatic --noinput'` and we also migrate the database with `--command 'migrate'`.
 ~~~bash
 python manage.py serve --autoreload --static --command 'collectstatic --noinput' --command 'migrate'
 ~~~
@@ -363,7 +363,7 @@ After going to the graphql url ([http://127.0.0.1:8000/graphql](http://127.0.0.1
 ~~~
 
 
-In addition to the previously defined `admin` and `graphql` endpoints, hurricane starts a probe server on port+1, unless an explicit port for probes is specified. This feature is essential for cloud-native development, and it is only one of the many features of Django-Hurricane. For further features and information on hurricane, please refer to [<ins>**Full Django Hurricane Documentation**</ins>](https://django-hurricane.readthedocs.io/en/latest/).
+In addition to the previously defined `admin` and `graphql` endpoints, Hurricane starts a probe server on port+1, unless an explicit port for probes is specified. This feature is essential for cloud-native development, and it is only one of the many features of Django-Hurricane. For further features and information on Hurricane, please refer to [<ins>**Full Django Hurricane Documentation**</ins>](https://django-hurricane.readthedocs.io/en/latest/).
 
 
 ## 2. Run this application using Django-Hurricane in a Kubernetes cluster
@@ -449,7 +449,7 @@ and for instance you can access the graphql background at [**spacecrafts.127.0.0
 ### Built-in Kubernetes probes and custom check handler
 
 A big advantage of Django Hurricane is, that you don't need to write a lot of boilerplate code, i.e. probe handlers for Kubernetes probes,
-hurricane takes care of it.
+Hurricane takes care of it.
 
 You can also create your own check handler.
 
@@ -474,7 +474,7 @@ def example_check_main_engine(app_configs=None, **kwargs):
     # your check logic here
     errors = []
     logger.info("Our check has been called :]")
-    # we need to wrap all sync calls to the database into a sync_to_async wrapper for hurricane to use it in async way
+    # we need to wrap all sync calls to the database into a sync_to_async wrapper for Hurricane to use it in async way
     if not Component.objects.filter(title="Main engine").exists():
         errors.append(
             Error(
@@ -489,7 +489,7 @@ def example_check_main_engine(app_configs=None, **kwargs):
 ~~~
 
 Important: if you have a synchronous call in your check to the database or other part of your app, make sure, that you
-use `sync_to_async` to wrap those parts. Otherwise you will have problems with hurricane, as it expects all parts to be
+use `sync_to_async` to wrap those parts. Otherwise you will have problems with Hurricane, as it expects all parts to be
 asynchronous.
 
 Next, we set a default app config in `apps/components/__init__.py`
