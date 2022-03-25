@@ -29,7 +29,7 @@ django-graphene we will be able to use GraphQL functionality for our application
 > [<ins>**Run this application using Django Hurricane**</ins>](#2-run-this-application-using-django-hurricane-in-a-kubernetes-cluster)
 
 If you want to setup the project manual, you can proceed with the following section.
-Alternatively you could [<ins>**head to the next section**</ins>](#setup-with-a-cookiecutter-template) which uses the [<ins>**cookiecutter template**</ins>](https://github.com/Blueshoe/django-hurricane-template) we developed to bootstrap Django applications that use Django-Hurricane.
+Alternatively you could [<ins>**head to the next section**</ins>](#setup-with-a-cookiecutter-template) which uses the [<ins>**cookiecutter template**</ins>](https://github.com/django-hurricane/django-hurricane-template) we developed to bootstrap Django applications that use Django-Hurricane.
 Keep in mind that the cookiecutter template includes more (e.g. poetry, pre-commit, GitHub workflow, split-settings, etc.), so you might have slightly different results when doing the manual setup. 
 
 ### Manual Django setup
@@ -383,7 +383,7 @@ Next thing, we need to build a docker image and push it to a registry. You can s
 Remember to remove the adaptation of `pyproject.toml` if you've followed the project setup with our cookiecutter.
 
 Now we need to install Helm charts, which will define our cluster infrastructure. [<ins>**Our repository**</ins>](https://github.com/django-hurricane/spacecrafts-demo) already contains them in the `helm` directory.
-You can also use [<ins>**our cookiecutter**</ins>](https://github.com/Blueshoe/hurricane-based-helm-template) for Helm charts for a Hurricane-based Django app.
+You can also use [<ins>**our cookiecutter**</ins>](https://github.com/django-hurricane/hurricane-based-helm-template) for Helm charts for a Hurricane-based Django app.
 
 To use it, run following command from your projects root directory:
 ~~~bash

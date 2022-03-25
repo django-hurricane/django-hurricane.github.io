@@ -10,7 +10,7 @@ IDE which supports [**debugpy**](https://pypi.org/project/debugpy/) or [**pydevd
 Start a new Django-based project as you like.  
 
 Be sure to check out the specifically created 
-[**cookiecutter**](https://cookiecutter.readthedocs.io/en/latest/) template [**django-hurricane-template**](https://github.com/Blueshoe/django-hurricane-template). 
+[**cookiecutter**](https://cookiecutter.readthedocs.io/en/latest/) template [**django-hurricane-template**](https://github.com/django-hurricane/django-hurricane-template). 
 With that, you can run 
 ~~~bash
 cookiecutter gh:Blueshoe/django-hurricane-template
@@ -48,7 +48,7 @@ and media files, too.
 ## 6. Test your application in Kubernetes
 In order to run your fancy new application in Kubernetes you will need workload manifests. You can write them yourself
 or generate them from our specifically prepared [**cookiecutter**](https://cookiecutter.readthedocs.io/en/latest/) 
-Helm charts template [**hurricane-based-helm-template**](https://github.com/Blueshoe/hurricane-based-helm-template).
+Helm charts template [**hurricane-based-helm-template**](https://github.com/django-hurricane/hurricane-based-helm-template).
 Just run the following command, answer the questions accordingly and you will get ready-to-go Helm charts: 
 ~~~bash
 cookiecutter gh:Blueshoe/hurricane-based-helm-template

@@ -17,9 +17,9 @@ navbar-links:
   Development Guides:
     - Getting Started: "getting-started"
     - Basic Django Application: "basic-app"
-  Source Code: "https://github.com/Blueshoe/django-hurricane"
+  Source Code: "https://github.com/django-hurricane/django-hurricane"
   Documentation: "https://django-hurricane.readthedocs.io/en/latest/"
-  Changelog: "https://github.com/Blueshoe/django-hurricane/releases"
+  Changelog: "https://github.com/django-hurricane/django-hurricane/releases"
   Support: "support"
 #  Resources:
 #    - Beautiful Jekyll: "https://beautifuljekyll.com"

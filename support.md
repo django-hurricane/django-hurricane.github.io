@@ -14,7 +14,7 @@ We are working on technical documentation all the time. You may already find hel
 
 ## Github Discussions
 Do you have a special concern or just want to say hello? Head over to our 
-[**project discussions**](https://github.com/Blueshoe/django-hurricane/discussions/).
+[**project discussions**](https://github.com/django-hurricane/django-hurricane/discussions/).
 
 <br />
 
