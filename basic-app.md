@@ -7,8 +7,7 @@ title: Guide to your first Hurricane-based Application
 - Run it locally and then in Kubernetes with k3d
 - Add a custom check for Hurricane
 
-## Requirements
-You'll need:
+## What you'll need
 - [poetry](https://python-poetry.org/docs#installation){:target="_blank"}
 - [k3d](https://k3d.io/v5.4.1/#installation){:target="_blank"}
 - [helm](https://helm.sh/docs/intro/install/){:target="_blank"}
