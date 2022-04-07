@@ -10,8 +10,6 @@ title: Guide to your first Hurricane-based Application
 ## Requirements
 You'll need:
 - [poetry](https://python-poetry.org/docs#installation){:target="_blank"}
-
-For the Kubernetes parts you'll need:
 - [k3d](https://k3d.io/v5.4.1/#installation){:target="_blank"}
 - [helm](https://helm.sh/docs/intro/install/){:target="_blank"}
 - [kubectl](https://kubernetes.io/docs/tasks/tools/#kubectl){:target="_blank"}
