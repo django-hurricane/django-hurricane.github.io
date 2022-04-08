@@ -4,8 +4,8 @@ title: Guide to your first Hurricane-based Application
 ---
 ## What you'll learn
 - Create a Django app with Hurricane
-- Run it locally and then in Kubernetes with k3d
-- Add a custom check for Hurricane
+- Run it locally with virtualenv
+- Run it in local Kubernetes with k3d
 
 ## What you'll need
 - [poetry](https://python-poetry.org/docs#installation){:target="_blank"}
@@ -13,140 +13,31 @@ title: Guide to your first Hurricane-based Application
 - [helm](https://helm.sh/docs/intro/install/){:target="_blank"}
 - [kubectl](https://kubernetes.io/docs/tasks/tools/#kubectl){:target="_blank"}
 
-## Table of contents:
-1. [Create basic Django application](#1-create-basic-django-application)
-   1. [Manual Django setup](#manual-django-setup)
-   2. [Setup with a cookiecutter template](#setup-with-a-cookiecutter-template)
-   3. [Basic setup of the spacecrafts application](#basic-setup-of-the-spacecrafts-application)
-   4. [Configure GraphQL](#configure-graphql)
-   5. [Start Hurricane server](#start-hurricane-server)
-2. [Run this application using Django-Hurricane in a Kubernetes cluster](#2-run-this-application-using-django-hurricane-in-a-kubernetes-cluster)
-   1. [Built-in Kubernetes probes and custom check handler](#built-in-kubernetes-probes-and-custom-check-handler)
-   2. [Local Kubernetes development: code hot-reloading, debugging and more](#local-kubernetes-development-code-hot-reloading-debugging-and-more)
+## Table of contents
+1. [Application details and settings](#1-application-details-and-settings)
+   1. [Spacecrafts application and Hurricane settings](#spacecrafts-application-and-hurricane-settings)
+   2. [Details of GraphQL configuration](#details-of-graphql-configuration)
+2. [2. Run this app in a local virtualenv](#2-run-this-app-in-a-local-virtualenv)
+   1. [Set environment variables](#set-environment-variables)
+   2. [Start the Hurricane server](#start-the-hurricane-server)
+3. [Run this application using Django-Hurricane in a Kubernetes cluster](#3-run-this-application-using-django-hurricane-in-a-kubernetes-cluster)
+   1. [Creating the k3d cluster](#creating-the-k3d-cluster)
+   2. [Install the Helm charts](#install-the-helm-charts)
+   3. [Local Kubernetes development: code hot-reloading, debugging and more](#local-kubernetes-development-code-hot-reloading-debugging-and-more)
 
-## 1. Create basic Django application
-We will make it a little bit more interesting and instead of a plain Django application we will create a django-graphene application.
-You can learn more about Graphene [<ins>**here**</ins>](https://docs.graphene-python.org/projects/django/en/latest/){:target="_blank"}. In it's essence, with 
+## 1. Application details and settings
+
+### Spacecrafts application and Hurricane settings
+We will make it a bit more interesting and instead of a plain Django application we will create a django-graphene application.
+You can learn more about Graphene [<ins>**here**</ins>](https://docs.graphene-python.org/projects/django/en/latest/){:target="_blank"}. In its essence, with 
 django-graphene we will be able to use GraphQL functionality for our application.
 
-> Alternatively, you can skip this part and clone [<ins>**this repository**</ins>](https://github.com/django-hurricane/spacecrafts-demo){:target="_blank"}. 
-> 
-> You can then head directly to step 2:  
-> [<ins>**Run this application using Django Hurricane**</ins>](#2-run-this-application-using-django-hurricane-in-a-kubernetes-cluster)
+You can find the application at [<ins>**this repository**</ins>](https://github.com/django-hurricane/spacecrafts-demo){:target="_blank"}.
+It is set up with our [<ins>**cookiecutter template**</ins>](https://github.com/django-hurricane/django-hurricane-template){:target="_blank"}.
 
-If you want to setup the project manual, you can proceed with the following section.
-Alternatively you could [<ins>**head to the next section**</ins>](#setup-with-a-cookiecutter-template) which uses the [<ins>**cookiecutter template**</ins>](https://github.com/django-hurricane/django-hurricane-template){:target="_blank"} we developed to bootstrap Django applications that use Django-Hurricane.
-Keep in mind that the cookiecutter template includes more (e.g. poetry, pre-commit, GitHub workflow, split-settings, etc.), so you might have slightly different results when doing the manual setup. 
-
-### Manual Django setup
-First, create a project directory
-~~~bash
-mkdir spacecrafts
-cd spacecrafts
-~~~
-
-Create a virtualenv to isolate our package dependencies locally
-~~~bash
-virtualenv env
-source env/bin/activate  # On Windows use `env\Scripts\activate`
-~~~
-
-Install Django, Django-Graphene and Django-Hurricane
-~~~bash
-pip install django~=3.2.12 graphene_django django-hurricane
-~~~
-
-Create directory to contain source code. This step is optional, we do it so it matches our cookiecutter and [<ins>**our repository**</ins>](https://github.com/django-hurricane/spacecrafts-demo){:target="_blank"}.
-~~~bash
-mkdir src
-cd src
-~~~
-
-Set up a new project
-~~~bash
-django-admin startproject spacecrafts .  # Note:'.' character
-~~~
-
-Create a directory to contain Django apps. This is also optional and done to match the cookiecutter.
-~~~bash
-mkdir apps
-~~~
-
-### Setup with a cookiecutter template
-
-If necessary [<ins>**install cookiecutter**</ins>](https://cookiecutter.readthedocs.io/en/1.7.2/installation.html){:target="_blank"} (i.e. `pip install cookiecutter`).
-
-Use our cookiecutter template to set up the Django project
-~~~bash
-cookiecutter gh:Blueshoe/django-hurricane-template
-~~~
-
-You can use following answers for the prompt:
-~~~bash
-project_name [awesome-django-project]: spacecrafts
-project_verbose_name [Awesome Django Hurricane Project]: A demo project to create "spacecrafts", using Django-Hurricane.
-project_domain [blueshoe.de]: 
-organization [Blueshoe GmbH]:
-~~~
-
-Create a virtualenv:
-~~~bash
-cd spacecrafts
-virtualenv env
-source env/bin/activate  # On Windows use `env\Scripts\activate`
-~~~
-
-If you know how to use [<ins>**poetry**</ins>](https://python-poetry.org/docs/){:target="_blank"}, you can use it to add Django-Graphene and Django-Hurricane:
-~~~bash
-poetry add graphene-django django-hurricane
-~~~
-Otherwise you can just use pip
-~~~bash
-pip install graphene-django django-hurricane
-~~~
-In order to locally install the dependencies, you need to add following to `pyproject.toml`, for example directly under `authors = [...]`:
-~~~bash
-packages = [
-    { include = "src" },
-]
-~~~
-Install the rest of the dependencies (which are specified in `src/pyproject.toml`):
-~~~bash
-pip install .
-~~~
-
-The cookiecutter also includes [<ins>**django-csp**</ins>](https://django-csp.readthedocs.io/en/latest/){:target="_blank"}, which is out of the scope of this tutorial.
-If you know what you're doing, feel free to configure it correctly.
-But you can just remove it from the project, by removing it from `_base_settings` in `src/configuration/__init__.py` and from `MIDDLEWARES` in `src/configuration/components/middlewares.py`.
-
-To continue with the next section, change into the `src` directory
-~~~bash
-cd src
-~~~
-
-### Set environment variables
-
-You need to set some environment variables, you can do that by creating a `.env`-file in `src` with following content:
-~~~bash
-# src/.env
-DATABASE_ENGINE=django.db.backends.sqlite3
-DATABASE_NAME=spacecrafts.sqlite3
-DJANGO_SECRET_KEY=H96HwkhWFCKmWjRnJKJNkT3wSDCJ7MJ22Qi5C5t9UX8Hem89Q4
-DJANGO_STATIC_ROOT=static
-DJANGO_DEBUG=True
-~~~
-
-### Basic setup of the spacecrafts application
-The following steps will create the spacecrafts application. They are the same, no matter whether you did a manual project setup or whether you used our cookiecutter template. 
-
-Set up the application
-~~~bash
-cd apps
-django-admin startapp components
-cd ..
-~~~
-
-Create model structures
+Our spacecrafts app has two simple models to configure components that are associated to a category. 
+They are contained in a Django app called `components`.
+The `models.py` looks like this:
 ~~~python
 # src/apps/components/models.py
 
@@ -176,10 +67,10 @@ class Component(models.Model):
 
 ~~~
 
-Add your new app as well as `graphene_django` and `hurricane` to your settings file
+The `components`-app as well as `graphene_django` and `hurricane` are added in the settings file:
+
 ~~~python
-# manual setup: src/spacecrafts/settings.py 
-# cookiecutter: src/configuration/components/apps.py
+# src/configuration/components/apps.py
 
 INSTALLED_APPS = [
     ...,
@@ -189,10 +80,9 @@ INSTALLED_APPS = [
 ]
 ~~~
 
-To have Hurricanes logs available, add the following logging setting to your settings file:
+The logging settings are adapted to have Hurricanes logs available:
 ~~~python
-# manual setup: src/spacecrafts/settings.py
-# cookiecutter: src/configuration/components/logging.py
+# src/configuration/components/logging.py
 
 LOGGING = {
     "version": 1,
@@ -217,50 +107,12 @@ LOGGING = {
 
 ~~~
 
-We also need to adapt the name of the app config:
-~~~python
-# src/apps/components/apps.py
+### Details of GraphQL configuration
 
-from django.apps import AppConfig
-
-
-class ComponentsConfig(AppConfig):
-    default_auto_field = 'django.db.models.BigAutoField'
-    name = 'apps.components'
-
-~~~
-
-Migrate changes
-~~~bash
-python manage.py makemigrations
-python manage.py migrate
-~~~
-
-Our repository contains a fixture in `src/apps/components/fixture.json`, you can download it from [<ins>**here**</ins>](https://github.com/django-hurricane/spacecrafts-demo/blob/1ec41396048baef501092ebf247b5d7450bed515/src/apps/components/fixtures/components.json){:target="_blank"} and place it in `src/apps/components/fixture.json`. 
-It allows you to load data to your database from the fixture file, that defines several model instances
-~~~bash
-python manage.py loaddata components
-~~~
-Alternatively you can create model instances on your own through the admin interface. For that you need to add following lines to your admin file:
+The essential part of `graphene_django` is a graph representation of objects. Such a representation is defined in a so-called schema, which can be found in `schema.py`:
 
 ~~~python
-# src/apps/components/admin.py
-
-from django.contrib import admin
-from apps.components.models import Category, Component
-
-admin.site.register(Category)
-admin.site.register(Component)
-
-~~~
-
-### Configure GraphQL
-
-The essential part of `graphene_django` is a graph representation of objects. To create such a representation you need to create a so-called schema. Create a `schema.py` file in your projects root with the following content:
-
-~~~python
-# manual setup: src/spacecrafts/schema.py
-# cookiecutter: src/configuration/schema.py
+# src/configuration/schema.py
 
 import graphene
 from graphene_django import DjangoObjectType
@@ -299,18 +151,9 @@ schema = graphene.Schema(query=Query)
 ~~~
 > For more information on the concept of schema, please refer to [<ins>**Graphene Documentation**</ins>](https://docs.graphene-python.org/projects/django/en/latest/schema/){:target="_blank"}.
 
-Now you just need to let Django know where it can find the graphene schema. Add following setting to your settings file:
-If you did the manual Django setup:
+The settings are configured to let Django know where it can find the graphene schema:
 ~~~python
-# src/spacecrafts/settings.py
-
-GRAPHENE = {
-    "SCHEMA": "spacecrafts.schema.schema"
-}
-~~~
-If you did the cookiecutter setup (to keep it clean you can add a new file `src/configuration/components/graphene.py` for this and include it in the `_base_settings` specified in `src/configuration/__init__.py`):
-~~~python
-# src/configuration/components/commons.py
+# src/configuration/components/graphene.py
 
 GRAPHENE = {
     "SCHEMA": "configuration.schema.schema"
@@ -318,10 +161,9 @@ GRAPHENE = {
 ~~~
 
 
-You also need to add a graphql endpoint to your urls configuration. Your `urls.py` should look like the following:
+Additionally, the graphql endpoint is added to the urls configuration:
 ~~~python
-# manual setup: src/spacecrafts/urls.py
-# cookiecutter: src/configuration/urls.py
+# src/configuration/urls.py
 
 from django.contrib import admin
 from django.urls import path
@@ -335,7 +177,27 @@ urlpatterns = [
 ]
 ~~~
 
-### Start Hurricane server
+
+## 2. Run this app in a local virtualenv
+
+### Set environment variables
+
+You need to set some environment variables, you can do that by creating a `.env`-file in `src` with following content:
+~~~bash
+# src/.env
+DATABASE_ENGINE=django.db.backends.sqlite3
+DATABASE_NAME=spacecrafts.sqlite3
+DJANGO_SECRET_KEY=H96HwkhWFCKmWjRnJKJNkT3wSDCJ7MJ22Qi5C5t9UX8Hem89Q4
+DJANGO_STATIC_ROOT=static
+DJANGO_DEBUG=True
+~~~
+
+### Start the Hurricane server
+Before you can start the server you need to activate a virtualenv, and install the dependencies:
+~~~bash
+poetry shell
+poetry install
+~~~
 
 Now you can start the server. With `--autoreload` flag server will be automatically reloaded upon changes in the code. 
 Static files will be served if you add `--static` flag. We instruct Hurricane to run two Django management command. We collect statics with `--command 'collectstatic --noinput'` and we also migrate the database with `--command 'migrate'`.
@@ -353,6 +215,12 @@ You should get similar output upon the start of the server:
 2022-01-21 10:19:21,436 INFO     hurricane.server.general Serving static files under /static/ from static
 2022-01-21 10:19:21,437 INFO     hurricane.server.general Startup time is 0.0026073455810546875 seconds
 ~~~
+
+Our repository contains a fixture to get your spacecrafts components started, you can load it by running in a `poetry shell`:
+~~~bash
+python manage.py loaddata components
+~~~
+Alternatively you can create model instances on your own through the admin interface.
 
 After going to the graphql url ([http://127.0.0.1:8000/graphql](http://127.0.0.1:8000/graphql){:target="_blank"}) you can play around with GraphQL querying. For example you could list all components and their categories:
 ~~~
@@ -373,8 +241,9 @@ After going to the graphql url ([http://127.0.0.1:8000/graphql](http://127.0.0.1
 In addition to the previously defined `admin` and `graphql` endpoints, Hurricane starts a probe server on port+1, unless an explicit port for probes is specified. This feature is essential for cloud-native development, and it is only one of the many features of Django-Hurricane. For further features and information on Hurricane, please refer to [<ins>**Full Django Hurricane Documentation**</ins>](https://django-hurricane.readthedocs.io/en/latest/){:target="_blank"}.
 
 
-## 2. Run this application using Django-Hurricane in a Kubernetes cluster
+## 2. Run this application in a Kubernetes cluster
 
+### Creating the k3d cluster
 We're using [k3d](https://k3d.io/){:target="_blank"} to create and run a local kubernetes cluster. You can install it via:
 ~~~bash
 wget -q -O - https://raw.githubusercontent.com/rancher/k3d/main/install.sh | bash
@@ -386,63 +255,47 @@ After installing k3d you can create a spacecrafts cluster with the following com
 k3d cluster create spacecrafts --agents 1 -p 8080:80@agent:0  # for version < 5 the nodefilter needs to be specified as "@agent[0]"
 ~~~
 
-Next thing, we need to build a docker image and push it to a registry. You can skip this step if you want and use the image from our public quay.io: [quay.io/django-hurricane/spacecrafts-demo](https://quay.io/repository/django-hurricane/spacecrafts-demo){:target="_blank"}.
-Remember to remove the adaptation of `pyproject.toml` if you've followed the project setup with our cookiecutter.
+### Install the Helm charts
+We need a docker image of the application that's pushed to a registry. You can use the image from our public quay.io: [quay.io/django-hurricane/spacecrafts-demo](https://quay.io/repository/django-hurricane/spacecrafts-demo){:target="_blank"}.
 
-Now we need to install Helm charts, which will define our cluster infrastructure. [<ins>**Our repository**</ins>](https://github.com/django-hurricane/spacecrafts-demo){:target="_blank"} already contains them in the `helm` directory.
-You can also use [<ins>**our cookiecutter**</ins>](https://github.com/django-hurricane/hurricane-based-helm-template){:target="_blank"} for Helm charts for a Hurricane-based Django app.
+The Helm charts for the spacecrafts application are contained in the `helm` directory. 
+They have been created with [<ins>**our cookiecutter**</ins>](https://github.com/django-hurricane/hurricane-based-helm-template){:target="_blank"} for Helm charts for a Hurricane-based Django app.
 
-To use it, run following command from your projects root directory:
+If we look in the `deployment.yaml` we can see the usage of Hurricanes `serve` command:
 ~~~bash
-cookiecutter gh:Blueshoe/hurricane-based-helm-template
+# helm/spacecrafts/templates/deployment.yaml
+[...]
+          args: ["python manage.py serve
+                  --command 'migrate'
+                  --command 'collectstatic --no-input'
+                  --port {{ .Values.containerPort.portNumber }}
+                  --probe-port {{ .Values.containerProbePort }}
+                  {{- if .Values.serveStatic }}
+                  --static
+                  {{ end -}}
+                  {{- if .Values.serveMedia }}
+                  --media
+                  {{ end -}}
+                 "]
+[...]
+
 ~~~
 
-You can use following answers for the prompt:
-~~~bash
-app_slug [project-name]: spacecrafts
-description [Chart for the spacecrafts service]: Helm charts for the spacecrafts demo project
-image_repo [quay.io/blueshoe/dj-hurricane-base]: quay.io/django-hurricane/spacecrafts-demo
-Select use_imagePullSecret:
-1 - yes
-2 - no
-Choose from 1, 2 [1]: 2
-registry_username []: 
-registry_password []: 
-postgresql_version [10.13.7]: 
-Select use_oauth2_proxy:
-1 - yes
-2 - no
-Choose from 1, 2 [1]: 2
-Select use_celery_worker:
-1 - yes
-2 - no
-Choose from 1, 2 [1]: 2
-Select use_celery_beat:
-1 - yes
-2 - no
-Choose from 1, 2 [1]: 2
-Select use_rabbitmq:
-1 - yes
-2 - no
-Choose from 1, 2 [1]: 2
-rabbitmq_version [8.18.1]: 
-ampq_connect_image_repo [quay.io/blueshoe/amqp-connect]: 
-~~~
-
-You don't have to adapt any values or templates. The next step is to install the dependencies and the charts.
+The next step is to install the dependencies and the charts. The following commands need to be run from the `helm` directory. 
 If you don't already have it locally available, you may need to add the [bitnami charts](https://github.com/bitnami/charts){:target="_blank"}.
 ~~~bash
+cd helm
 helm repo add bitnami https://charts.bitnami.com/bitnami
 helm dep build spacecrafts
 helm install spacecrafts spacecrafts/
 ~~~
 
-We can check, which deployments and pods are running
+We can check which deployments and pods are running:
 ~~~bash
 kubectl get deployments
 kubectl get pods
 ~~~
-This way we can inspect the logs of a pod
+This way we can inspect the logs of the spacecrafts-pod and can observe the requests from the probes:
 ~~~bash
 kubectl logs -f spacecrafts-XXXXX-XXXXXXXX
 ~~~
@@ -450,96 +303,26 @@ By running this command we can get the url, which we can use to access the space
 ~~~bash
 kubectl get ingress
 ~~~
+
+You might want to install the fixture, which you can using following commands:
+~~~bash
+kubectl exec -it spacecrafts-XXXXX-XXXXXXXX -c spacecrafts -- bash
+python manage.py loaddata components
+~~~
+If you don't load it, you're strongly advised to create a component with the title "Main engine".
+The spacecrafts application also contains a custom check handler, which is described in more detail in [**this guide**](https://django-hurricane.io/custom-checks/).
+A big advantage of Django Hurricane is that you don't need to write a lot of boilerplate code, i.e. probe handlers for Kubernetes probes, Hurricane takes care of it. 
+So we don't have to do anything on that end here.
+
 You should be able to access the application using the ingress hostname, prepended by the port you specified when creating the k3d cluster (in this case [**spacecrafts.dev.127.0.0.1.nip.io:8080**](http://spacecrafts.dev.127.0.0.1.nip.io:8080){:target="_blank"})
 and for instance you can access the graphql background at [**spacecrafts.dev.127.0.0.1.nip.io:8080/graphql**](http://spacecrafts.dev.127.0.0.1.nip.io:8080/graphql){:target="_blank"}.
-If DNS Rebinding doesn't work or isn't allowed on your local setup, you need to add an entry to your `/etc/hosts` in order to access the URL:
+If DNS Rebinding doesn't work or isn't allowed on your local setup and therefore you can't use [**nip.io**](https://nip.io/){:target="_blank"}, you need to add an entry to your `/etc/hosts` in order to access the url:
 ~~~bash
 # /etc/hosts
 [...]
 127.0.0.1       spacecrafts.dev.127.0.0.1.nip.io
 [...]
 ~~~
-
-### Built-in Kubernetes probes and custom check handler
-
-A big advantage of Django Hurricane is, that you don't need to write a lot of boilerplate code, i.e. probe handlers for Kubernetes probes,
-Hurricane takes care of it.
-
-You can also create your own check handler.
-
-For this, you can create a file named `src/apps/components/checks.py` with the following content:
-
-~~~python
-# src/apps/components/checks.py
-import logging
-
-from django.core.checks import Error
-
-from apps.components.models import Component
-
-logger = logging.getLogger("hurricane")
-
-
-def example_check_main_engine(app_configs=None, **kwargs):
-    """
-    Check for existence of the "Main engine" component in the database
-    """
-
-    # your check logic here
-    errors = []
-    logger.info("Our check has been called :]")
-    # we need to wrap all sync calls to the database into a sync_to_async wrapper for Hurricane to use it in async way
-    if not Component.objects.filter(title="Main engine").exists():
-        errors.append(
-            Error(
-                "an error",
-                hint="There is no main engine in the spacecraft, it need's to exist with the name 'Main engine'. "
-                "Please create it in the admin or by installing the fixture.",
-                id="components.E001",
-            )
-        )
-
-    return errors
-~~~
-
-Important: if you have a synchronous call in your check to the database or other part of your app, make sure, that you
-use `sync_to_async` to wrap those parts. Otherwise you will have problems with Hurricane, as it expects all parts to be
-asynchronous.
-
-Next, we set a default app config in `apps/components/__init__.py`
-
-~~~python
-# src/apps/components/__init__.py
-default_app_config = 'apps.components.apps.ComponentsConfig'
-~~~
-
-Now we need to register this check, so that Django can use it in its check logic. 
-Note that we register the check with the tag `hurricane`, as Hurricane only runs check with that tag.
-Your `apps/components/apps.py` should have following content:
-
-~~~python
-# apps/components/apps.py
-from django.apps import AppConfig
-
-
-class ComponentsConfig(AppConfig):
-    default_auto_field = "django.db.models.BigAutoField"
-    name = "apps.components"
-
-    def ready(self):
-        from django.core.checks import register
-
-        from apps.components.checks import example_check_main_engine
-
-        register(example_check_main_engine, "hurricane")
-~~~
-
-We register our check only after the application is ready, otherwise we will run into the error of AppNotReady.
-This way we make sure, that this check is only registered after the application is ready, as check requires connection
-to the model. 
-
-To verify whether the check works, you can just delete the `Main engine` component from the database (if you don't use our image registry and you've just added the check, keep in mind that you need to build, push and deploy the image).
-If you're running Hurricane locally, you can also directly browse to `/alive` at the probe port (`8001` if you've followed the first steps of the tutorial) to inspect its output.
 
 
 ### Local Kubernetes development: code hot-reloading, debugging and more

@@ -17,6 +17,7 @@ navbar-links:
   Development Guides:
     - Getting Started: "getting-started"
     - Basic Django Application: "basic-app"
+    - Adding Custom Checks: "custom-checks"
   Source Code: "https://github.com/django-hurricane/django-hurricane"
   Documentation: "https://django-hurricane.readthedocs.io/en/latest/"
   Changelog: "https://github.com/django-hurricane/django-hurricane/releases"
