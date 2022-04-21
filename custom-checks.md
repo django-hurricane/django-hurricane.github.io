@@ -63,8 +63,9 @@ default_app_config = 'apps.components.apps.ComponentsConfig'
 ~~~
 
 Now we need to register this check, so that Django can use it in its check logic. 
-Note that we register the check with the tag `hurricane`, as Hurricane only runs check with that tag.
-Your `apps/components/apps.py` should have following content:
+Note that we register the check with the tag `hurricane`, as Hurricane only runs check with that tag. 
+Additionally we need to set `deploy=True`, so that the check will not be run at every management command.
+Your `apps/components/apps.py` should have the following content:
 
 ~~~python
 # apps/components/apps.py
@@ -80,7 +81,7 @@ class ComponentsConfig(AppConfig):
 
         from apps.components.checks import example_check_main_engine
 
-        register(example_check_main_engine, "hurricane")
+        register(example_check_main_engine, "hurricane", deploy=True)
 ~~~
 
 We register our check only after the application is ready, otherwise we will run into the error of `AppNotReady`.
