@@ -7,7 +7,7 @@ cover-img: assets/img/bg_clouds1.png
 
 <div class="jumbotron dh-color">
     <p class="lead">Hurricane is an initiative to fit Django perfectly with Kubernetes. It is supposed to cover many capabilities in order to run Django in a Cloud Native environment, including a Tornado-powered Django app server.</p>
-    <h2>Now available <a href="https://github.com/django-hurricane/django-hurricane/releases/tag/0.9.2">Hurricane 0.9.2</a></h2>
+    <h2>Now available <a href="https://github.com/django-hurricane/django-hurricane/releases/tag/1.0.0">Hurricane 1.0.0</a></h2>
     <hr class="my-4">
     <div class="centered">
         <a class="btn btn-success btn-lg" href="getting-started">Get Started With Hurricane</a>
@@ -18,8 +18,8 @@ cover-img: assets/img/bg_clouds1.png
 
 [![PyPI version](https://badge.fury.io/py/django-hurricane.svg)](https://badge.fury.io/py/django-hurricane)
 ![Build Status](https://github.com/django-hurricane/django-hurricane/actions/workflows/python-app.yml/badge.svg)
-[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=Blueshoe_django-hurricane&metric=alert_status)](https://sonarcloud.io/dashboard?id=Blueshoe_django-hurricane)
-[![Coverage Status](https://coveralls.io/repos/github/Blueshoe/django-hurricane/badge.svg)](https://coveralls.io/github/Blueshoe/django-hurricane)
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=django-hurricane_django-hurricane&metric=alert_status)](https://sonarcloud.io/dashboard?id=django-hurricane_django-hurricane)
+[![Coverage Status](https://coveralls.io/repos/github/django-hurricane/django-hurricane/badge.svg)](https://coveralls.io/github/django-hurricane/django-hurricane)
 [![ReadTheDocs](https://readthedocs.org/projects/django-hurricane/badge/?version=latest)](https://django-hurricane.readthedocs.io/en/latest/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
