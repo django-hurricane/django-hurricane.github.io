@@ -241,7 +241,7 @@ After going to the graphql url ([http://127.0.0.1:8000/graphql](http://127.0.0.1
 In addition to the previously defined `admin` and `graphql` endpoints, Hurricane starts a probe server on port+1, unless an explicit port for probes is specified. This feature is essential for cloud-native development, and it is only one of the many features of Django-Hurricane. For further features and information on Hurricane, please refer to [<ins>**Full Django Hurricane Documentation**</ins>](https://django-hurricane.readthedocs.io/en/latest/){:target="_blank"}.
 
 
-## 2. Run this application in a Kubernetes cluster
+## 3. Run this application in a Kubernetes cluster
 
 ### Creating the k3d cluster
 We're using [k3d](https://k3d.io/){:target="_blank"} to create and run a local kubernetes cluster. You can install it via:
