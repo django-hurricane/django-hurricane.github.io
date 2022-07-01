@@ -304,12 +304,6 @@ By running this command we can get the url, which we can use to access the space
 kubectl get ingress
 ~~~
 
-You might want to install the fixture, which you can using following commands:
-~~~bash
-kubectl exec -it spacecrafts-XXXXX-XXXXXXXX -c spacecrafts -- bash
-python manage.py loaddata components
-~~~
-If you don't load it, you're strongly advised to create a component with the title "Main engine".
 The spacecrafts application also contains a custom check handler, which is described in more detail in [**this guide**](https://django-hurricane.io/custom-checks/).
 A big advantage of Django Hurricane is that you don't need to write a lot of boilerplate code, i.e. probe handlers for Kubernetes probes, Hurricane takes care of it. 
 So we don't have to do anything on that end here.
