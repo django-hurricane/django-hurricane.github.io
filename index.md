@@ -7,7 +7,7 @@ cover-img: assets/img/bg_clouds1.png
 
 <div class="jumbotron dh-color">
     <p class="lead">Hurricane is an initiative to fit Django perfectly with Kubernetes. It is supposed to cover many capabilities to run Django in a Cloud Native environment, including a Tornado-powered Django app server.</p>
-    <h2>Now available <a href="https://github.com/django-hurricane/django-hurricane/releases/tag/1.4.0">Hurricane 1.4.0</a></h2>
+    <h2>Now available <a href="https://github.com/django-hurricane/django-hurricane/releases/tag/1.5.0">Hurricane 1.5.0</a></h2>
     <hr class="my-4">
     <div class="centered">
         <a class="btn btn-success btn-lg" href="getting-started">Get Started With Hurricane</a>
@@ -26,13 +26,15 @@ cover-img: assets/img/bg_clouds1.png
 
 ## Key Features of Django Hurricane
 
-The goal of Django Hurricane is to build the most robust and scalable applications with Django by leveraging the existing know-how of our favourite framework.
+The goal of Django Hurricane is to build the most robust and scalable applications with Django by leveraging the existing know-how of our favorite framework.
 
--   Better integration of Django and Kubernetes
+-   Best integration of Django and Kubernetes
 -   Tornado-powered Django application server
 -   Tornado-powered Django AMQP consumer
 -   Probe server out-of-the box with options for standard Kubernetes probes
 -   Webhooks to check up on the application status
+-   Prometheus instrumentation
+-   Operational excellence
 
 ## Why Hurricane?
 Django was developed with the batteries included approach and already handles most of the challenges around web 
@@ -52,4 +54,4 @@ IT operation requirements as Django is for web development. The inherent monolit
 to roll out recurring operation patterns with each application. It's not about getting Django to run in a 
 Kubernetes cluster (you may have already solved this), it's about integrating Django as tightly as possible with Kubernetes 
 in order to harness the full power of that platform. Creating the most robust, scalable and secure applications with 
-Django by leveraging the existing expertise of our favourite framework is the main goal of this initiative.
+Django by leveraging the existing expertise of our favorite framework is the main goal of this initiative.
